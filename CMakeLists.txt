@@ -5,6 +5,8 @@ project(sonoplayer)
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VERSION 0.0.${PATCH_VERSION})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED On)
 option(ENABLE_TESTS "to add tests to the project" ON)
 
 include(GNUInstallDirs)
@@ -19,10 +21,6 @@ if(MSVC)
 else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
-
-set_property(GLOBAL PROPERTY CXX_STANDARD 17)
-set_property(GLOBAL PROPERTY CXX_STANDARD_REQUIRED ON)
-
 
 
 add_library(sndfile SHARED IMPORTED)
