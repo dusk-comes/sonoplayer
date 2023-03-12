@@ -1,5 +1,7 @@
 #include <sndfile.hh>
 #include <array>
+#include <utility>
+#include <functional>
 
 #define BUFFER_SIZE 1024
 #define SAMPLE float
@@ -13,6 +15,10 @@ class samples_loader
 
         int samplerate() const;
         int channels() const;
+        std::size_t frames() const;
+
+        using Block = std::pair<std::array<SAMPLE, BUFFER_SIZE>, std::size_t>;
+        Block receive();
 
     private:
         SndfileHandle m_file;
