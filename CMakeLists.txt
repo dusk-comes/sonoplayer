@@ -50,5 +50,7 @@ link_libraries(sndfile stdc++fs)
 add_subdirectory(src)
 
 if(ENABLE_TESTS)
+    include(CTest)
+    enable_testing()
     add_subdirectory(tests)
 endif(ENABLE_TESTS)
