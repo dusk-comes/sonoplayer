@@ -4,7 +4,7 @@ set(TEST_TARGET "tests")
 include(Catch)
 
 add_executable(${TEST_TARGET}
-    test_samples_loader.cpp)
+    test_soundfile.cpp)
 
 target_link_libraries(${TEST_TARGET}
     PRIVATE Src

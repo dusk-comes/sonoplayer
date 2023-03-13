@@ -1,7 +1,7 @@
 set(APP_TARGET ${CMAKE_PROJECT_NAME})
 
 add_library(Src
-    samples_loader.cpp)
+    soundfile.cpp)
 
 add_executable(${APP_TARGET} main.cpp)
 

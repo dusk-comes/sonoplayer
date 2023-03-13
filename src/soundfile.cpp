@@ -1,9 +1,9 @@
-#include "samples_loader.hpp"
+#include "soundfile.hpp"
 #include <ios>
 #include <sstream>
 #include <experimental/filesystem>
 
-samples_loader::samples_loader(const char *filename)
+soundfile::soundfile(const char *filename)
 {
     if (!std::experimental::filesystem::exists(filename))
     {
@@ -18,24 +18,24 @@ samples_loader::samples_loader(const char *filename)
         throw std::ios_base::failure(m_file.strError());
 }
 
-int samples_loader::samplerate() const
+int soundfile::samplerate() const
 {
     return m_file.samplerate();
 }
 
-int samples_loader::channels() const
+int soundfile::channels() const
 {
     return m_file.channels();
 }
 
-std::size_t samples_loader::frames() const
+std::size_t soundfile::frames() const
 {
     return m_file.frames();
 }
 
-auto samples_loader::receive() -> Block
+std::size_t soundfile::data(SAMPLE *buffer, std::size_t buf_size)
 {
-    auto max_count_frame = m_buffer.size() / channels();
-    auto read_count_frames = m_file.readf(m_buffer.data(), max_count_frame);    
-    return {m_buffer, read_count_frames};
+    auto count_max_frames = buf_size / channels();
+    auto count_read_frames = m_file.readf(buffer, count_max_frames);    
+    return count_read_frames ;
 }
