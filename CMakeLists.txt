@@ -6,15 +6,16 @@ set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VERSION 0.0.${PATCH_VERSION})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED On)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(ENABLE_TESTS "to add tests to the project" ON)
 
 include(GNUInstallDirs)
 include(CheckIncludeFileCXX)
+include(libsndfile.cmake)                                   # external linked library
+include(fftw.cmake)                                         # external linked library
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
 file(COPY "resources" DESTINATION "${CMAKE_BINARY_DIR}")
-
 
 if(MSVC)
     add_compile_options(-W4)
@@ -22,28 +23,7 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-
-add_library(sndfile SHARED IMPORTED)
-
-find_library(SOUND_FILE_LIB_PATH 
-    NAMES sndfile
-    HINTS ${LIBDIR})
-if(NOT SOUND_FILE_LIB_PATH)
-    message(FATAL_ERROR "libsndfile.so wasn't found")
-endif()
-
-target_include_directories(sndfile INTERFACE ${OLDINCLUDEDIR})
-CHECK_INCLUDE_FILE_CXX("sndfile.hh" SOUND_FILE_HEADER_FOUND)
-if (NOT SOUND_FILE_HEADER_FOUND)
-    message(FATAL_ERROR "sndfile.hh wasn't found")
-endif()
-
-set_target_properties(sndfile PROPERTIES
-    IMPORTED_LOCATION ${SOUND_FILE_LIB_PATH})
-
-link_libraries(sndfile stdc++fs)
-
-
+link_libraries(stdc++fs)
 
 add_subdirectory(src)
 
