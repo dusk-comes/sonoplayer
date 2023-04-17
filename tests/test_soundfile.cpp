@@ -4,7 +4,7 @@
 #include <cmath>
 #include <array>
 
-TEST_CASE("get file's metadata")
+TEST_CASE("SOUNDFILE TO READ METADATA")
 {
     soundfile file("resources/test.wav");
 
@@ -12,13 +12,13 @@ TEST_CASE("get file's metadata")
     REQUIRE(file.channels() == 1);
 }
 
-TEST_CASE("try to open a not existed file")
+TEST_CASE("SOUNDFILE TO OPEN A NON EXISTING FILE")
 {
     REQUIRE_THROWS_AS(soundfile("foo.bar"), std::ios_base::failure);
     REQUIRE_THROWS_WITH(soundfile("foo.bar"), "filename foo.bar not exists: iostream error");
 }
 
-TEST_CASE("read samples")
+TEST_CASE("SOUNDFILE TO READ SAMPLES")
 {
     soundfile file("resources/test.wav");
     auto total_count_samples = file.frames() * file.channels();
