@@ -4,6 +4,8 @@
 
 class window
 {
+    friend class test_window;
+
     private:
         using floating_t = double;
         using output_container = std::vector<floating_t>;
