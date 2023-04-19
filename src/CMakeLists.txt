@@ -1,7 +1,7 @@
 set(APP_TARGET ${CMAKE_PROJECT_NAME})
 
 add_library(Src
-    spectrogram.cpp
+    spectr.cpp
     window.cpp
     soundfile.cpp)
 

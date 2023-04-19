@@ -4,6 +4,7 @@ set(TEST_TARGET "tests")
 include(Catch)
 
 add_executable(${TEST_TARGET}
+    test_spectr.cpp
     test_window.cpp
     test_soundfile.cpp)
 
@@ -15,6 +16,9 @@ add_test(NAME soundfile COMMAND ${TEST_TARGET} "SOUNDFILE*"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 add_test(NAME window COMMAND ${TEST_TARGET} "*WINDOW"
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+
+add_test(NAME spectr COMMAND ${TEST_TARGET} "SPECTR*"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 #need to run a test with tag "[exp]" for a new feature
