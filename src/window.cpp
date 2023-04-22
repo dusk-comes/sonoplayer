@@ -2,55 +2,48 @@
 #include "common.hpp"
 #include <cmath>
 #include <functional>
-#include <numeric>
 #include <algorithm>
 
-auto window::handler(const std::size_t size, const function &func) -> output_container
+void window::hanning(const SAMPLE_ARRAY &data, const std::size_t size)
 {
-    output_container result(size);
-    std::iota(result.begin(), result.end(), 0);
-    std::for_each(result.begin(), result.end(), func);
-    return result;
-}
-
-auto window::hanning(const std::size_t size) -> output_container
-{
-    auto func = [&size](floating_t &element) {
-        element = 0.5  - 0.5 * std::cos(2 * M_PI * element / (size - 1));
+    auto func = [size, index = 0](SAMPLE &sample) mutable {
+        sample *= 0.5 - 0.5 * std::cos(2 * M_PI * index++ / (size - 1));
     };
 
-    return handler(size, func);
+    std::for_each(data.get(), data.get() + size, func);
 }
 
-auto window::hamming(const std::size_t size) -> output_container
+void window::hamming(const SAMPLE_ARRAY &data, const std::size_t size)
 {
-    auto func = [&size](floating_t &element) {
-        element = 0.54 - 0.46 * std::cos(2 * M_PI * element / (size - 1));
+    auto func = [size, index = 0](SAMPLE &sample) mutable {
+        sample *= 0.54 - 0.46 * std::cos(2 * M_PI * index++ / (size - 1));
     };
 
-    return handler(size, func);
+    std::for_each(data.get(), data.get() + size, func);
 }
 
-auto window::blackman(const std::size_t size) -> output_container
+void window::blackman(const SAMPLE_ARRAY &data, const std::size_t size)
 {
-    auto func = [&size](floating_t &element) {
-        element = 0.42
-            - 0.5 * std::cos(2 * M_PI * element / (size - 1))
-            + 0.08 * std::cos(4 * M_PI * element / (size - 1));
+    auto func = [size, index = 0](SAMPLE &sample) mutable {
+        sample *= 0.42
+            - 0.5 * std::cos(2 * M_PI * index / (size - 1))
+            + 0.08 * std::cos(4 * M_PI * index / (size - 1));
+        ++index;
     };
 
-    return handler(size, func);
+    std::for_each(data.get(), data.get() + size, func);
 }
 
-auto window::flattop(const std::size_t size) -> output_container
+void window::flattop(const SAMPLE_ARRAY &data, const std::size_t size)
 {
-    auto func = [&size](floating_t &element) {
-        element = 0.21557895
-            - 0.41663158 * std::cos(2 * M_PI * element / (size - 1))
-            + 0.277263158 * std::cos(4 * M_PI * element / (size - 1))
-            - 0.083578947 * std::cos(6 * M_PI * element / (size - 1))
-            + 0.006947368 * std::cos(8 * M_PI * element / (size - 1));
+    auto func = [size, index = 0](SAMPLE &sample) mutable {
+        sample *= 0.21557895
+            - 0.41663158 * std::cos(2 * M_PI * index / (size - 1))
+            + 0.277263158 * std::cos(4 * M_PI * index / (size - 1))
+            - 0.083578947 * std::cos(6 * M_PI * index / (size - 1))
+            + 0.006947368 * std::cos(8 * M_PI * index / (size - 1));
+        ++index;
     };
 
-    return handler(size, func);
+    std::for_each(data.get(), data.get() + size, func);
 }

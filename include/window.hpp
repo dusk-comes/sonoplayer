@@ -1,5 +1,7 @@
-#include <bits/c++config.h>
-#include <vector>
+#ifndef WINDOW_HPP
+#define WINDOW_HPP
+
+#include "common.hpp"
 #include <functional>
 
 class window
@@ -7,19 +9,17 @@ class window
     friend class test_window;
 
     private:
-        using floating_t = double;
-        using output_container = std::vector<floating_t>;
-        using function = std::function<void(floating_t&)>;
-
-        static output_container handler(const std::size_t, const function&);
+        using function = std::function<void(SAMPLE&)>;
 
     public:
-        static output_container hanning(const std::size_t);
-        static output_container hamming(const std::size_t);
-        static output_container blackman(const std::size_t);
-        static output_container flattop(const std::size_t);
+        static void hanning(const SAMPLE_ARRAY&, const std::size_t);
+        static void hamming(const SAMPLE_ARRAY&, const std::size_t);
+        static void blackman(const SAMPLE_ARRAY&, const std::size_t);
+        static void flattop(const SAMPLE_ARRAY&, const std::size_t);
         //static output_container bartlett(const std::size_t);
         //static output_container kaiser(const std::size_t);
         //static output_container rectangular(const std::size_t);
 
 };
+
+#endif /* WINDOW_HHP */
