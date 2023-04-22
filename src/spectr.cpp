@@ -1,19 +1,18 @@
 #include "spectr.hpp"
+#include "error.hpp"
 #include <algorithm>
-
-spectr::error::error(const char *msg) : message{msg} {}
-
-const char *spectr::error::what() const throw() {return message;}
+#include <memory>
 
 spectr::spectr(const std::size_t size) :
-    m_samples_count{size}
+    m_input_size{size},
+    m_output_size{size/2 + 1}
 {
-    m_input = fftw_alloc_real(m_samples_count);
-    m_output = fftw_alloc_complex(m_samples_count/2 + 1);
-    m_plan = fftw_plan_dft_r2c_1d(m_samples_count, m_input, m_output, FFTW_MEASURE);
+    m_input = fftw_alloc_real(m_input_size);
+    m_output = fftw_alloc_complex(m_output_size);
+    m_plan = fftw_plan_dft_r2c_1d(m_input_size, m_input, m_output, FFTW_MEASURE);
 
     if (m_plan == nullptr)
-        throw spectr::error("ERROR: couldn't create fftw_plan");
+        throw error("ERROR: couldn't create fftw_plan");
 }
 
 spectr::~spectr()
@@ -23,13 +22,18 @@ spectr::~spectr()
     fftw_free(m_output);
 }
 
-std::complex<SAMPLE> *spectr::calc(SAMPLE *data, const std::size_t size)
+auto spectr::calculate(const SAMPLE_ARRAY &data, const std::size_t size) -> COMPLEX_ARRAY
 {
-    if (size != m_samples_count)
-        throw spectr::error("ERROR: input's data exceed fftw rate");
+    if (size != m_input_size)
+        throw error("ERROR: input's data exceed fft rate");
 
-    std::copy(data, data + size, m_input);
+    std::copy(data.get(), data.get() + size, m_input);
     fftw_execute(m_plan);
 
-    return reinterpret_cast<std::complex<SAMPLE> *>(m_output);
+    COMPLEX_ARRAY result(new COMPLEX[m_output_size]);
+    std::copy(reinterpret_cast<COMPLEX *>(m_output),
+            reinterpret_cast<COMPLEX *>(m_output) + m_output_size,
+            result.get()); 
+
+    return result;
 }

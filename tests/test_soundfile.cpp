@@ -27,8 +27,8 @@ TEST_CASE("SOUNDFILE TO READ SAMPLES")
     auto expected_count_block = (std::size_t) std::ceil( (double) total_count_samples / BUFFER_SIZE);
 
     std::size_t count_block = 0;
-    std::array<SAMPLE, BUFFER_SIZE> buf;
-    while (file.data(buf.data(), buf.size()))
+    SAMPLE_ARRAY buf(new SAMPLE[BUFFER_SIZE]);
+    while (file.data(buf, BUFFER_SIZE))
     {
         ++count_block;
     }

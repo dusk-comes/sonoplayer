@@ -1,12 +1,20 @@
+#ifndef SPECTR_HPP
+#define SPECTR_HPP
+
 #include "common.hpp"
-#include <bits/c++config.h>
 #include <fftw3.h>
 #include <complex>
+#include <memory>
+
 
 class spectr
 {
+    using COMPLEX = std::complex<SAMPLE>;
+    using COMPLEX_ARRAY = std::unique_ptr<COMPLEX[]>;
+
     private:
-        const std::size_t m_samples_count;
+        const std::size_t m_input_size;
+        const std::size_t m_output_size;
         SAMPLE *m_input;
         fftw_complex *m_output;
         fftw_plan m_plan;
@@ -16,17 +24,7 @@ class spectr
         spectr(const std::size_t);
         ~spectr();
 
-        std::complex<SAMPLE> *calc(SAMPLE*, const std::size_t);
-
-        class error : public std::exception
-        {
-            private:
-                const char *message;
-
-            public:
-                error(const char*);
-                
-                const char *what() const throw();
-        };
-
+        COMPLEX_ARRAY calculate(const SAMPLE_ARRAY&, const std::size_t);
 };
+
+#endif /* SPECTR_HPP */
