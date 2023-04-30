@@ -22,6 +22,11 @@ spectr::~spectr()
     fftw_free(m_output);
 }
 
+std::size_t spectr::series_size() const
+{
+    return m_output_size;
+}
+
 auto spectr::calculate(const SAMPLE_ARRAY &data, const std::size_t size) -> COMPLEX_ARRAY
 {
     if (size != m_input_size)

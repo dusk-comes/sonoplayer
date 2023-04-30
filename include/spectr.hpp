@@ -9,9 +9,6 @@
 
 class spectr
 {
-    using COMPLEX = std::complex<SAMPLE>;
-    using COMPLEX_ARRAY = std::unique_ptr<COMPLEX[]>;
-
     private:
         const std::size_t m_input_size;
         const std::size_t m_output_size;
@@ -25,6 +22,7 @@ class spectr
         ~spectr();
 
         COMPLEX_ARRAY calculate(const SAMPLE_ARRAY&, const std::size_t);
+        std::size_t series_size() const;
 };
 
 #endif /* SPECTR_HPP */
