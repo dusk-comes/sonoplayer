@@ -4,6 +4,7 @@ set(TEST_TARGET "tests")
 include(Catch)
 
 add_executable(${TEST_TARGET}
+    test_spectrogram.cpp
     test_spectr.cpp
     test_window.cpp
     test_soundfile.cpp)

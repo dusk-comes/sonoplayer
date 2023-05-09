@@ -11,7 +11,6 @@ class spectrogram
     private:
         std::size_t m_segment_size;
         std::size_t m_overlapping;
-        std::size_t m_overlap_size;
         std::unique_ptr<spectr> m_ft;
 
         void normalize(const COMPLEX_ARRAY&, const std::size_t) const;

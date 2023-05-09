@@ -10,7 +10,7 @@
 
 using complex = std::complex<SAMPLE>;
 
-TEST_CASE("SPECTR OF NATURAL ROW", "[exp]")
+TEST_CASE("SPECTR OF NATURAL ROW")
 {
     std::ifstream numpy_out{"resources/ft_natural_row.txt"};
     std::vector<complex> expected{std::istream_iterator<complex>(numpy_out), std::istream_iterator<complex>()};

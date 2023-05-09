@@ -1,9 +1,9 @@
-#! /usr/bin/gnuplot
+#! /usr/bin/gnuplot -c
 set pm3d map
-splot 'spectral.dat'
+splot ARG1
 set terminal png crop
-set output 'spectral-map.png'
-set xlabel 'Pulse generator voltage [V]'
+set output ARG1[1:strlen(ARG1)-4].".png"
+set xlabel 'Time [V]'
 set ylabel 'Frequency [THz]'
 set cblabel 'Intensity [a.u.]'
 set cbrange [0 to GPVAL_DATA_Z_MAX]
