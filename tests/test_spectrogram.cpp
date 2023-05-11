@@ -24,7 +24,8 @@ TEST_CASE("SPECTROGRAM", "[exp]")
 
     SECTION("no overlapping segments")
     {
-        const std::size_t overlapping_blocks = 0;
+        const std::size_t overlapping_blocks = 120;
+        sp.overlapping(120);
         const double measurement_duration = (block_length - overlapping_blocks) / samplerate;
 
         std::vector<double> t(2 / step);

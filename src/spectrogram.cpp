@@ -16,8 +16,9 @@ void spectrogram::overlapping(const std::size_t size) {m_overlapping = (size < m
 
 void spectrogram::normalize(const COMPLEX_ARRAY &series_f, const std::size_t size) const
 {
-    std::for_each(series_f.get(), series_f.get() + size, [this](auto &value) {
-                            value /= m_segment_size;});
+    std::transform(series_f.get(), series_f.get() + size,
+            series_f.get(),
+            [this](auto value) {return value *= 2. /  m_segment_size;});
 }
 
 void spectrogram::magnitude(const COMPLEX_ARRAY &series_f, const SAMPLE_ARRAY &output, const std::size_t size) const
@@ -56,7 +57,7 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::size_t data_siz
 
         apply_windowing(segment, m_segment_size);
         auto series_f = m_fft->calculate(segment, m_segment_size);
-        //normalize(series_f, m_fft->series_size());
+        normalize(series_f, m_fft->series_size());
 
         static const SAMPLE_ARRAY spectr_power(new SAMPLE[m_fft->series_size()]);
         magnitude(series_f, spectr_power, m_fft->series_size());
