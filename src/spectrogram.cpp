@@ -7,7 +7,7 @@
 spectrogram::spectrogram() :
     m_segment_size{0},
     m_overlapping{0},
-    m_ft{nullptr}
+    m_fft{nullptr}
 {}
 
 void spectrogram::segments(const std::size_t size) {m_segment_size = size;}
@@ -39,12 +39,12 @@ void spectrogram::prepare()
         throw error("ERROR: spectrogram's segments size is 0");
     }
 
-    m_ft = std::make_unique<spectr>(m_segment_size);
+    m_fft = std::make_unique<spectr>(m_segment_size);
 }
 
 void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::size_t data_size, const std::function<void(SAMPLE_ARRAY, std::size_t)> &callback)
 {
-    const SAMPLE_ARRAY segment(new SAMPLE[m_segment_size]);
+    static const SAMPLE_ARRAY segment(new SAMPLE[m_segment_size]);
     static const auto step = m_segment_size - m_overlapping;
 
     for (std::size_t segment_begin = 0, segment_end = segment_begin + m_segment_size;
@@ -54,14 +54,15 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::size_t data_siz
         segment_end = (segment_end < data_size) ? segment_end : data_size;
         std::copy(data.get() + segment_begin, data.get() + segment_end, segment.get());
 
-        //auto processed = segment_end - segment_begin;
         apply_windowing(segment, m_segment_size);
-        auto series_f = m_ft->calculate(segment, m_segment_size);
-        //normalize(series_f, m_ft->series_size());
+        auto series_f = m_fft->calculate(segment, m_segment_size);
+        //normalize(series_f, m_fft->series_size());
 
-        static const SAMPLE_ARRAY spectr_power(new SAMPLE[m_ft->series_size()]);
-        magnitude(series_f, spectr_power, m_ft->series_size());
+        static const SAMPLE_ARRAY spectr_power(new SAMPLE[m_fft->series_size()]);
+        magnitude(series_f, spectr_power, m_fft->series_size());
 
-        callback(spectr_power, m_ft->series_size());
+        callback(spectr_power, m_fft->series_size());
+        std::fill(spectr_power.get(), spectr_power.get() + m_fft->series_size(), 0.);
+        std::fill(segment.get(), segment.get() + m_fft->series_size(), 0.);
     }
 }
