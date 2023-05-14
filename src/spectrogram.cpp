@@ -3,6 +3,7 @@
 #include "error.hpp"
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 
 spectrogram::spectrogram() :
     m_segment_size{0},
@@ -46,11 +47,11 @@ void spectrogram::prepare()
 void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::size_t data_size, const std::function<void(SAMPLE_ARRAY, std::size_t)> &callback)
 {
     static const SAMPLE_ARRAY segment(new SAMPLE[m_segment_size]);
-    static const auto step = m_segment_size - m_overlapping;
+    const auto step = m_segment_size - m_overlapping;
 
     for (std::size_t segment_begin = 0, segment_end = segment_begin + m_segment_size;
             segment_begin < data_size;
-            segment_begin += step, segment_end += m_segment_size)
+            segment_begin += step, segment_end = segment_begin + m_segment_size)
     {
         segment_end = (segment_end < data_size) ? segment_end : data_size;
         std::copy(data.get() + segment_begin, data.get() + segment_end, segment.get());
