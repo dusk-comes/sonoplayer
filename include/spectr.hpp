@@ -10,9 +10,7 @@
 class spectr
 {
     private:
-        const std::size_t m_input_size;
-        const std::size_t m_output_size;
-        SAMPLE *m_input;
+        REAL_ARRAY m_input;
         COMPLEX_ARRAY m_output;
         fftw_plan m_plan;
 
