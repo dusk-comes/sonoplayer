@@ -15,16 +15,16 @@ void spectrogram::segments(const std::size_t size) {m_segment_size = size;}
 
 void spectrogram::overlapping(const std::size_t size) {m_overlapping = (size < m_segment_size) ? size : m_segment_size;}
 
-void spectrogram::normalize(const COMPLEX_ARRAY &series_f, const std::size_t size) const
+void spectrogram::normalize(COMPLEX_ARRAY &series_f) const
 {
-    std::transform(series_f.get(), series_f.get() + size,
-            series_f.get(),
+    std::transform(series_f.begin(), series_f.end(),
+            series_f.begin(),
             [this](auto value) {return value *= 2. /  m_segment_size;});
 }
 
-void spectrogram::magnitude(const COMPLEX_ARRAY &series_f, const SAMPLE_ARRAY &output, const std::size_t size) const
+void spectrogram::magnitude(COMPLEX_ARRAY &series_f, const SAMPLE_ARRAY &output) const
 {
-    std::transform(series_f.get(), series_f.get() + size, output.get(), [](auto value) {
+    std::transform(series_f.begin(), series_f.end(), output.get(), [](auto value) {
             auto squared_magnitude = std::norm(value);
             return 10. / std::log(10.) * std::log(squared_magnitude + 1e-6);});
 }
@@ -58,10 +58,10 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::size_t data_siz
 
         apply_windowing(segment, m_segment_size);
         auto series_f = m_fft->calculate(segment, m_segment_size);
-        normalize(series_f, m_fft->series_size());
+        normalize(series_f);
 
         static const SAMPLE_ARRAY spectr_power(new SAMPLE[m_fft->series_size()]);
-        magnitude(series_f, spectr_power, m_fft->series_size());
+        magnitude(series_f, spectr_power);
 
         callback(spectr_power, m_fft->series_size());
         std::fill(spectr_power.get(), spectr_power.get() + m_fft->series_size(), 0.);

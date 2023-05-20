@@ -13,8 +13,8 @@ class spectrogram
         std::size_t m_overlapping;
         std::unique_ptr<spectr> m_fft;
 
-        void normalize(const COMPLEX_ARRAY&, const std::size_t) const;
-        void magnitude(const COMPLEX_ARRAY&, const SAMPLE_ARRAY&, const std::size_t) const;
+        void normalize(COMPLEX_ARRAY&) const;
+        void magnitude(COMPLEX_ARRAY&, const SAMPLE_ARRAY&) const;
         void apply_windowing(const SAMPLE_ARRAY&, const std::size_t) const;
 
     public:

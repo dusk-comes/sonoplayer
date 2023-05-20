@@ -13,7 +13,7 @@ class spectr
         const std::size_t m_input_size;
         const std::size_t m_output_size;
         SAMPLE *m_input;
-        fftw_complex *m_output;
+        COMPLEX_ARRAY m_output;
         fftw_plan m_plan;
 
     public:
