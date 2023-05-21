@@ -2,13 +2,12 @@
 #include <catch2/catch_approx.hpp>
 #include <numeric>
 #include <algorithm>
+#include <filesystem>
 #include <cmath>
 #include <fstream>
 
 #include "common.hpp"
 #include "spectrogram.hpp"
-
-#include <iostream>
 
 struct chirp { 
     public:
@@ -73,7 +72,6 @@ void write_file(const char *filename, const std::vector<std::vector<double>> &ve
     }
 }
 
-
 TEST_CASE("SPECTROGRAM")
 {
     const double step = 0.001;
@@ -124,4 +122,17 @@ TEST_CASE("SPECTROGRAM")
         CHECK(result.front().size() == expected_bins);
         CHECK(result.back().size() == expected_bins);
     }
+}
+
+TEST_CASE("GRAM HASH")
+{
+    //TODO compare hash-value instead of files size
+
+    auto no_overlaping_source = std::filesystem::path{"resources/spectral_chirp.png"};
+    auto no_overlaping_result = std::filesystem::path{"spectral_chirp.png"};
+    REQUIRE(std::filesystem::file_size(no_overlaping_source) == std::filesystem::file_size(no_overlaping_result));
+
+    auto overlaping_source = std::filesystem::path{"resources/spectral_chirp_overlaps.png"};
+    auto overlapping_result = std::filesystem::path{"spectral_chirp_overlaps.png"};
+    REQUIRE(std::filesystem::file_size(overlapping_result) == std::filesystem::file_size(overlapping_result));
 }
