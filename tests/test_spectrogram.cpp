@@ -8,16 +8,17 @@
 #include "common.hpp"
 #include "spectrogram.hpp"
 
+#include <iostream>
+
 struct chirp { 
     public:
-        SAMPLE_ARRAY y;
         double freq_start;
         double freq_end;
 
         chirp(const std::size_t samples, const double step) :
-            y(samples),
             freq_start{0},
             freq_end{0},
+            y(samples),
             coef(2), 
             initialized(false)
         {
@@ -35,6 +36,7 @@ struct chirp {
         }
 
     private:
+        SAMPLE_ARRAY y;
         const double coef;
         bool initialized;
 
@@ -94,12 +96,18 @@ TEST_CASE("SPECTROGRAM")
     sp.segments(block_length);
     sp.prepare();
 
+    auto expected_bins = bins + 1; // ftt routine returning DC
     SECTION("without overlapping")
     {
         const double time_resolution = block_length / samplerate;
 
         sp.calculate(data.get(), fill_result);
         write_file("spectral_chirp.dat", result, time_resolution, freq_resolution, bins);
+
+        auto expected_segments = std::ceil(static_cast<double>(data.get().size()) / block_length);
+        CHECK(result.size() == expected_segments);
+        CHECK(result.front().size() == expected_bins);
+        CHECK(result.back().size() == expected_bins);
     }
 
     SECTION("overlapping segments")
@@ -110,5 +118,10 @@ TEST_CASE("SPECTROGRAM")
 
         sp.calculate(data.get(), fill_result);
         write_file("spectral_chirp_overlaps.dat", result, time_resolution, freq_resolution, bins);
+
+        auto expected_segments = std::ceil(static_cast<double>(data.get().size()) / (block_length - overlapping_blocks));
+        CHECK(result.size() == expected_segments);
+        CHECK(result.front().size() == expected_bins);
+        CHECK(result.back().size() == expected_bins);
     }
 }
