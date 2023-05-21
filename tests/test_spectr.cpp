@@ -16,11 +16,11 @@ TEST_CASE("SPECTR OF NATURAL ROW")
     std::vector<complex> expected{std::istream_iterator<complex>(numpy_out), std::istream_iterator<complex>()};
     const auto row_size = (expected.size() - 1) * 2;
 
-    SAMPLE_ARRAY data(new SAMPLE[row_size]);
-    std::iota(data.get(), data.get() + row_size, 0);
+    SAMPLE_ARRAY data(row_size);
+    std::iota(data.begin(), data.end(), 0);
 
     spectr sp(row_size);
-    auto result = sp.calculate(data, row_size);
+    auto result = sp.calculate(data);
 
     for (std::size_t i = 0; i < expected.size(); ++i)
     {

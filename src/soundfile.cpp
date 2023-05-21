@@ -33,9 +33,9 @@ std::size_t soundfile::frames() const
     return m_file.frames();
 }
 
-std::size_t soundfile::data(const SAMPLE_ARRAY &buffer, std::size_t buf_size)
+std::size_t soundfile::data(SAMPLE_ARRAY &buffer)
 {
-    auto count_max_frames = buf_size / channels();
-    auto count_read_frames = m_file.readf(buffer.get(), count_max_frames);    
+    auto count_max_frames = buffer.size() / channels();
+    auto count_read_frames = m_file.readf(buffer.data(), count_max_frames);    
     return count_read_frames;
 }

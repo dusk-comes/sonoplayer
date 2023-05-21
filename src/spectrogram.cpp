@@ -3,7 +3,6 @@
 #include "error.hpp"
 #include <algorithm>
 #include <cmath>
-#include <iostream>
 
 spectrogram::spectrogram() :
     m_segment_size{0},
@@ -22,16 +21,16 @@ void spectrogram::normalize(COMPLEX_ARRAY &series_f) const
             [this](auto value) {return value *= 2. /  m_segment_size;});
 }
 
-void spectrogram::magnitude(COMPLEX_ARRAY &series_f, const SAMPLE_ARRAY &output) const
+void spectrogram::magnitude(COMPLEX_ARRAY &series_f, SAMPLE_ARRAY &output) const
 {
-    std::transform(series_f.begin(), series_f.end(), output.get(), [](auto value) {
+    std::transform(series_f.begin(), series_f.end(), output.begin(), [](auto value) {
             auto squared_magnitude = std::norm(value);
             return 10. / std::log(10.) * std::log(squared_magnitude + 1e-6);});
 }
 
-void spectrogram::apply_windowing(const SAMPLE_ARRAY &data, const std::size_t size) const
+void spectrogram::apply_windowing(SAMPLE_ARRAY &data) const
 {
-    window::hamming(data, size);
+    window::hamming(data);
 }
 
 void spectrogram::prepare()
@@ -44,27 +43,27 @@ void spectrogram::prepare()
     m_fft = std::make_unique<spectr>(m_segment_size);
 }
 
-void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::size_t data_size, const std::function<void(SAMPLE_ARRAY, std::size_t)> &callback)
+void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::function<void(SAMPLE_ARRAY)> &callback)
 {
-    static const SAMPLE_ARRAY segment(new SAMPLE[m_segment_size]);
+    static SAMPLE_ARRAY segment(m_segment_size);
     const auto step = m_segment_size - m_overlapping;
 
     for (std::size_t segment_begin = 0, segment_end = segment_begin + m_segment_size;
-            segment_begin < data_size;
+            segment_begin < data.size();
             segment_begin += step, segment_end = segment_begin + m_segment_size)
     {
-        segment_end = (segment_end < data_size) ? segment_end : data_size;
-        std::copy(data.get() + segment_begin, data.get() + segment_end, segment.get());
+        segment_end = (segment_end < data.size()) ? segment_end : data.size();
+        std::copy(data.begin() + segment_begin, data.begin() + segment_end, segment.begin());
 
-        apply_windowing(segment, m_segment_size);
-        auto series_f = m_fft->calculate(segment, m_segment_size);
+        apply_windowing(segment);
+        auto series_f = m_fft->calculate(segment);
         normalize(series_f);
 
-        static const SAMPLE_ARRAY spectr_power(new SAMPLE[m_fft->series_size()]);
+        static SAMPLE_ARRAY spectr_power(m_fft->series_size());
         magnitude(series_f, spectr_power);
 
-        callback(spectr_power, m_fft->series_size());
-        std::fill(spectr_power.get(), spectr_power.get() + m_fft->series_size(), 0.);
-        std::fill(segment.get(), segment.get() + m_fft->series_size(), 0.);
+        callback(spectr_power);
+        std::fill(spectr_power.begin(), spectr_power.end(), 0.);
+        std::fill(segment.begin(), segment.end(), 0.);
     }
 }

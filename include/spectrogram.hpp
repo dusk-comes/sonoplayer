@@ -14,8 +14,8 @@ class spectrogram
         std::unique_ptr<spectr> m_fft;
 
         void normalize(COMPLEX_ARRAY&) const;
-        void magnitude(COMPLEX_ARRAY&, const SAMPLE_ARRAY&) const;
-        void apply_windowing(const SAMPLE_ARRAY&, const std::size_t) const;
+        void magnitude(COMPLEX_ARRAY&, SAMPLE_ARRAY&) const;
+        void apply_windowing(SAMPLE_ARRAY&) const;
 
     public:
         spectrogram();
@@ -24,7 +24,7 @@ class spectrogram
         void segments(const std::size_t);
         void overlapping(const std::size_t);
         void prepare();
-        void calculate(const SAMPLE_ARRAY&, const std::size_t, const std::function<void(SAMPLE_ARRAY, std::size_t)>&);
+        void calculate(const SAMPLE_ARRAY&, const std::function<void(SAMPLE_ARRAY)>&);
 };
 
 #endif /* SPECTROGRAM_HPP */

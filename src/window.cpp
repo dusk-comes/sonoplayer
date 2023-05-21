@@ -2,41 +2,40 @@
 #include "common.hpp"
 #include <cmath>
 #include <functional>
-#include <algorithm>
 
-void window::hanning(const SAMPLE_ARRAY &data, const std::size_t size)
+void window::hanning(SAMPLE_ARRAY &data)
 {
-    auto func = [size, index = 0](SAMPLE &sample) mutable {
+    auto func = [size = data.size(), index = 0](SAMPLE &sample) mutable {
         sample *= 0.5 - 0.5 * std::cos(2 * M_PI * index++ / (size - 1));
     };
 
-    std::for_each(data.get(), data.get() + size, func);
+    std::for_each(data.begin(), data.end(), func);
 }
 
-void window::hamming(const SAMPLE_ARRAY &data, const std::size_t size)
+void window::hamming(SAMPLE_ARRAY &data)
 {
-    auto func = [size, index = 0](SAMPLE &sample) mutable {
+    auto func = [size = data.size(), index = 0](SAMPLE &sample) mutable {
         sample *= 0.54 - 0.46 * std::cos(2 * M_PI * index++ / (size - 1));
     };
 
-    std::for_each(data.get(), data.get() + size, func);
+    std::for_each(data.begin(), data.end(), func);
 }
 
-void window::blackman(const SAMPLE_ARRAY &data, const std::size_t size)
+void window::blackman(SAMPLE_ARRAY &data)
 {
-    auto func = [size, index = 0](SAMPLE &sample) mutable {
+    auto func = [size = data.size(), index = 0](SAMPLE &sample) mutable {
         sample *= 0.42
             - 0.5 * std::cos(2 * M_PI * index / (size - 1))
             + 0.08 * std::cos(4 * M_PI * index / (size - 1));
         ++index;
     };
 
-    std::for_each(data.get(), data.get() + size, func);
+    std::for_each(data.begin(), data.end(), func);
 }
 
-void window::flattop(const SAMPLE_ARRAY &data, const std::size_t size)
+void window::flattop(SAMPLE_ARRAY &data)
 {
-    auto func = [size, index = 0](SAMPLE &sample) mutable {
+    auto func = [size = data.size(), index = 0](SAMPLE &sample) mutable {
         sample *= 0.21557895
             - 0.41663158 * std::cos(2 * M_PI * index / (size - 1))
             + 0.277263158 * std::cos(4 * M_PI * index / (size - 1))
@@ -45,5 +44,5 @@ void window::flattop(const SAMPLE_ARRAY &data, const std::size_t size)
         ++index;
     };
 
-    std::for_each(data.get(), data.get() + size, func);
+    std::for_each(data.begin(), data.end(), func);
 }

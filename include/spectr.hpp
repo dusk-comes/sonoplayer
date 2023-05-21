@@ -16,10 +16,10 @@ class spectr
 
     public:
         spectr() = delete;
-        spectr(const std::size_t);
+        explicit spectr(const std::size_t);
         ~spectr();
 
-        COMPLEX_ARRAY calculate(const SAMPLE_ARRAY&, const std::size_t);
+        COMPLEX_ARRAY calculate(const SAMPLE_ARRAY&);
         std::size_t series_size() const;
 };
 

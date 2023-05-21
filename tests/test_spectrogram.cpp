@@ -10,14 +10,14 @@
 
 struct chirp { 
     public:
-        const std::size_t size;
-        const SAMPLE_ARRAY y;
+        SAMPLE_ARRAY y;
         double freq_start;
         double freq_end;
 
         chirp(const std::size_t samples, const double step) :
-            size(samples),
-            y(new SAMPLE[samples]),
+            y(samples),
+            freq_start{0},
+            freq_end{0},
             coef(2), 
             initialized(false)
         {
@@ -38,9 +38,9 @@ struct chirp {
         const double coef;
         bool initialized;
 
-        void time_range(const double step) const
+        void time_range(const double step)
         {
-            std::for_each(y.get(), y.get() + size, [point=0., step](auto &value) mutable {
+            std::for_each(y.begin(), y.end(), [point=0., step](auto &value) mutable {
                     value = point;
                     point += step;});
         }
@@ -53,7 +53,7 @@ struct chirp {
                          std::pow(value, 2) / (3 * std::pow(coef, 2))));
             };
 
-            std::transform(y.get(), y.get() + size, y.get(), func);
+            std::transform(y.begin(), y.end(), y.begin(), func);
         }
 };
 
@@ -86,10 +86,8 @@ TEST_CASE("SPECTROGRAM")
 
     std::vector<std::vector<double>> result;
     
-    auto fill_result = [&result](SAMPLE_ARRAY magnitude, std::size_t size) {
-        std::vector<double> tmp;
-        std::copy(magnitude.get(), magnitude.get() + size, std::back_inserter(tmp));
-        result.push_back(tmp);
+    auto fill_result = [&result](SAMPLE_ARRAY magnitude) {
+        result.push_back(magnitude);
     };
 
     spectrogram sp;
@@ -100,7 +98,7 @@ TEST_CASE("SPECTROGRAM")
     {
         const double time_resolution = block_length / samplerate;
 
-        sp.calculate(data.get(), data.size, fill_result);
+        sp.calculate(data.get(), fill_result);
         write_file("spectral_chirp.dat", result, time_resolution, freq_resolution, bins);
     }
 
@@ -110,7 +108,7 @@ TEST_CASE("SPECTROGRAM")
         sp.overlapping(overlapping_blocks);
         const double time_resolution = (block_length - overlapping_blocks) / samplerate;
 
-        sp.calculate(data.get(), data.size, fill_result);
+        sp.calculate(data.get(), fill_result);
         write_file("spectral_chirp_overlaps.dat", result, time_resolution, freq_resolution, bins);
     }
 }

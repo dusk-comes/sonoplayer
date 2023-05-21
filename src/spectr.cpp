@@ -26,12 +26,12 @@ std::size_t spectr::series_size() const
     return m_output.size();
 }
 
-COMPLEX_ARRAY spectr::calculate(const SAMPLE_ARRAY &data, const std::size_t size)
+COMPLEX_ARRAY spectr::calculate(const SAMPLE_ARRAY &data)
 {
-    if (size != m_input.size())
+    if (data.size() != m_input.size())
         throw error("ERROR: input's data exceed fft rate");
 
-    std::copy(data.get(), data.get() + size, m_input.begin());
+    std::copy(data.begin(), data.end(), m_input.begin());
     fftw_execute(m_plan);
 
     return m_output;
