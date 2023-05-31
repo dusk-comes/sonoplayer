@@ -1,6 +1,5 @@
 #include "spectr.hpp"
 #include "common.hpp"
-#include "error.hpp"
 #include <algorithm>
 #include <memory>
 #include <limits>
@@ -17,8 +16,7 @@ spectr::spectr(const std::size_t size) :
             reinterpret_cast<fftw_complex*>(m_output.data()),
             FFTW_MEASURE);
 
-    if (m_plan == nullptr)
-        throw error("ERROR: couldn't create fftw_plan");
+    assert(m_plan != nullptr && "While creating fftw_plan");
 }
 
 spectr::~spectr()
@@ -33,8 +31,7 @@ std::size_t spectr::series_size() const
 
 COMPLEX_ARRAY spectr::calculate(const SAMPLE_ARRAY &data)
 {
-    if (data.size() != m_input.size())
-        throw error("ERROR: input's data exceed fft rate");
+    assert(data.size() == m_input.size() && "Input data's size equal fft rate");
 
     std::copy(data.begin(), data.end(), m_input.begin());
     fftw_execute(m_plan);

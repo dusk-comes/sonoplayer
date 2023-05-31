@@ -13,8 +13,8 @@ class soundfile
         explicit soundfile(const std::filesystem::path&) noexcept(false);
         ~soundfile() = default;
 
-        int samplerate() const;
-        int channels() const;
+        SAMPLE_SIZE samplerate() const;
+        SAMPLE_SIZE channels() const;
         std::size_t frames() const;
         std::size_t data(SAMPLE_ARRAY&);
 

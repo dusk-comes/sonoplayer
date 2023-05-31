@@ -1,4 +1,5 @@
 #include "soundfile.hpp"
+#include "common.hpp"
 #include <filesystem>
 #include <ios>
 #include <limits>
@@ -14,12 +15,12 @@ soundfile::soundfile(const std::filesystem::path &path)
         throw std::ios_base::failure(m_file.strError());
 }
 
-int soundfile::samplerate() const
+SAMPLE_SIZE soundfile::samplerate() const
 {
     return m_file.samplerate();
 }
 
-int soundfile::channels() const
+SAMPLE_SIZE soundfile::channels() const
 {
     return m_file.channels();
 }

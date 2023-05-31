@@ -3,14 +3,15 @@
 
 #include "common.hpp"
 #include "spectr.hpp"
+
 #include <memory>
 #include <functional>
 
 class spectrogram
 {
     private:
-        long m_segment_size;
-        long m_overlapping;
+        SAMPLE_SIZE m_segment_size;
+        SAMPLE_SIZE m_overlapping;
         std::unique_ptr<spectr> m_fft;
 
         void normalize(COMPLEX_ARRAY&) const;
@@ -21,8 +22,8 @@ class spectrogram
         spectrogram();
         ~spectrogram() = default;
 
-        void segments(const long);
-        void overlapping(const long);
+        void segments(const SAMPLE_SIZE);
+        void overlapping(const SAMPLE_SIZE);
         void prepare();
         void calculate(const SAMPLE_ARRAY&, const std::function<void(SAMPLE_ARRAY)>&);
 };

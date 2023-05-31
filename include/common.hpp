@@ -8,6 +8,7 @@
 #include "alloc.hpp"
 
 using SAMPLE = double;
+using SAMPLE_SIZE = unsigned int;
 using SAMPLE_ARRAY = std::vector<SAMPLE>;
 
 using COMPLEX = std::complex<SAMPLE>;

@@ -1,7 +1,5 @@
 #include "spectrogram.hpp"
-#include "common.hpp"
 #include "window.hpp"
-#include "error.hpp"
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -13,9 +11,9 @@ spectrogram::spectrogram() :
     m_fft{nullptr}
 {}
 
-void spectrogram::segments(const long size) {m_segment_size = size;}
+void spectrogram::segments(const SAMPLE_SIZE size) {m_segment_size = size;}
 
-void spectrogram::overlapping(const long size) {m_overlapping = (size < m_segment_size) ? size : m_segment_size;}
+void spectrogram::overlapping(const SAMPLE_SIZE size) {m_overlapping = (size < m_segment_size) ? size : m_segment_size;}
 
 void spectrogram::normalize(COMPLEX_ARRAY &series_f) const
 {
@@ -38,10 +36,7 @@ void spectrogram::apply_windowing(SAMPLE_ARRAY &data) const
 
 void spectrogram::prepare()
 {
-    if (m_segment_size == 0)
-    {
-        throw error("ERROR: spectrogram's segments size is 0");
-    }
+    assert(m_segment_size != 0 && "While prepare calculation");
 
     m_fft = std::make_unique<spectr>(m_segment_size);
 }
