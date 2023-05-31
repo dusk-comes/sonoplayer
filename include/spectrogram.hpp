@@ -9,8 +9,8 @@
 class spectrogram
 {
     private:
-        std::size_t m_segment_size;
-        std::size_t m_overlapping;
+        long m_segment_size;
+        long m_overlapping;
         std::unique_ptr<spectr> m_fft;
 
         void normalize(COMPLEX_ARRAY&) const;
@@ -21,8 +21,8 @@ class spectrogram
         spectrogram();
         ~spectrogram() = default;
 
-        void segments(const std::size_t);
-        void overlapping(const std::size_t);
+        void segments(const long);
+        void overlapping(const long);
         void prepare();
         void calculate(const SAMPLE_ARRAY&, const std::function<void(SAMPLE_ARRAY)>&);
 };

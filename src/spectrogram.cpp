@@ -1,8 +1,11 @@
 #include "spectrogram.hpp"
+#include "common.hpp"
 #include "window.hpp"
 #include "error.hpp"
 #include <algorithm>
 #include <cmath>
+#include <limits>
+#include <cassert>
 
 spectrogram::spectrogram() :
     m_segment_size{0},
@@ -10,15 +13,15 @@ spectrogram::spectrogram() :
     m_fft{nullptr}
 {}
 
-void spectrogram::segments(const std::size_t size) {m_segment_size = size;}
+void spectrogram::segments(const long size) {m_segment_size = size;}
 
-void spectrogram::overlapping(const std::size_t size) {m_overlapping = (size < m_segment_size) ? size : m_segment_size;}
+void spectrogram::overlapping(const long size) {m_overlapping = (size < m_segment_size) ? size : m_segment_size;}
 
 void spectrogram::normalize(COMPLEX_ARRAY &series_f) const
 {
     std::transform(series_f.begin(), series_f.end(),
-            series_f.begin(),
-            [this](auto value) {return value *= 2. /  m_segment_size;});
+                   series_f.begin(),
+                   [this](auto value) {return value *= 2. /  static_cast<double>(m_segment_size);});
 }
 
 void spectrogram::magnitude(COMPLEX_ARRAY &series_f, SAMPLE_ARRAY &output) const
@@ -48,12 +51,16 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::function<void(S
     static SAMPLE_ARRAY segment(m_segment_size);
     const auto step = m_segment_size - m_overlapping;
 
-    for (std::size_t segment_begin = 0, segment_end = segment_begin + m_segment_size;
-            segment_begin < data.size();
+    using diff_type = SAMPLE_ARRAY::difference_type;
+    assert(data.size() <= std::numeric_limits<diff_type>::max() && "While calculate Power");
+    auto data_size = static_cast<diff_type>(data.size());
+
+    for (diff_type segment_begin = 0, segment_end = segment_begin + m_segment_size;
+            segment_begin < data_size;
             segment_begin += step, segment_end = segment_begin + m_segment_size)
     {
-        segment_end = (segment_end < data.size()) ? segment_end : data.size();
-        std::copy(data.begin() + segment_begin, data.begin() + segment_end, segment.begin());
+        segment_end = (segment_end < data_size) ? segment_end : data_size;
+        std::copy(std::next(data.begin(), segment_begin), std::next(data.begin(), segment_end), segment.begin());
 
         apply_windowing(segment);
         auto series_f = m_fft->calculate(segment);

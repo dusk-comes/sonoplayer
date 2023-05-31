@@ -1,0 +1,10 @@
+---
+Checks:          '-*,bugprone-*'
+WarningsAsErrors: ''
+HeaderFilterRegex: ''
+AnalyzeTemporaryDtors: false
+CheckOptions:
+    - key: bugprone-easily-swappable-parameters.MinimumLength
+      value: '4'
+...
+

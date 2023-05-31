@@ -1,5 +1,7 @@
 #include "soundfile.hpp"
 #include <ios>
+#include <limits>
+#include <cassert>
 #include <sstream>
 #include <filesystem>
 
@@ -36,6 +38,8 @@ std::size_t soundfile::frames() const
 std::size_t soundfile::data(SAMPLE_ARRAY &buffer)
 {
     auto count_max_frames = buffer.size() / channels();
-    auto count_read_frames = m_file.readf(buffer.data(), count_max_frames);    
+    assert(count_max_frames <= std::numeric_limits<sf_count_t>::max() && "While read soundfile");
+    
+    auto count_read_frames = m_file.readf(buffer.data(), static_cast<sf_count_t>(count_max_frames));
     return count_read_frames;
 }

@@ -66,7 +66,9 @@ void write_file(const char *filename, const std::vector<std::vector<double>> &ve
     {
         for (std::size_t bin = 1; bin < bins; ++bin)
         {
-            file << time_delta * time_point << " " << freq_resolution * bin << " " << vec[time_point][bin] << std::endl; 
+            file << time_delta * static_cast<double>(time_point) << " "
+                 << freq_resolution * static_cast<double>(bin) << " "
+                 << vec[time_point][bin] << std::endl; 
         }
         file << std::endl;
     }
@@ -80,7 +82,7 @@ TEST_CASE("SPECTROGRAM")
     const double samplerate = 1 / step;
     const double freq_resolution = samplerate / block_length;
 
-    chirp data(2 / step, step);
+    chirp data(static_cast<std::size_t>(2 / step), step);
     data.freq_start = 50;
     data.freq_end = 250;
 
