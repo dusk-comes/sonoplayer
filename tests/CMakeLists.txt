@@ -35,12 +35,11 @@ add_test(NAME create_png
     COMMAND ${CMAKE_COMMAND} --build . --target gnuplot
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
-add_test(NAME compare_hash COMMAND ${TEST_TARGET} "GRAM HASH"
+add_test(NAME compare_files COMMAND ${TEST_TARGET} "CHECK FILE*"
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
 
 set_tests_properties(create_png PROPERTIES DEPENDS spectrogram)
-set_tests_properties(compare_hash PROPERTIES DEPENDS create_png)
-    
+set_tests_properties(compare_files PROPERTIES DEPENDS create_png) 
 
 #need to run a test with tag "[exp]" for a new feature
 #running catch binary produces convenient output

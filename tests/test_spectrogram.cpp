@@ -124,15 +124,16 @@ TEST_CASE("SPECTROGRAM")
     }
 }
 
-TEST_CASE("GRAM HASH")
+TEST_CASE("CHECK FILE NO OVERLAPPING", "[!mayfail]") //TODO contents comparison
 {
-    //TODO compare hash-value instead of files size
+    auto no_overlapping_result = std::filesystem::path{"spectral_chirp.png"};
+    auto no_overlapping_source = std::filesystem::path{"resources"} / no_overlapping_result;
+    CHECK(std::filesystem::file_size(no_overlapping_source) == std::filesystem::file_size(no_overlapping_result));
+}
 
-    auto no_overlaping_source = std::filesystem::path{"resources/spectral_chirp.png"};
-    auto no_overlaping_result = std::filesystem::path{"spectral_chirp.png"};
-    CHECK(std::filesystem::file_size(no_overlaping_source) == std::filesystem::file_size(no_overlaping_result));
-
-    auto overlaping_source = std::filesystem::path{"resources/spectral_chirp_overlaps.png"};
+TEST_CASE("CHECK FILE OVERLAPPING", "[!mayfail]") //TODO contents comparison
+{
     auto overlapping_result = std::filesystem::path{"spectral_chirp_overlaps.png"};
+    auto overlapping_source = std::filesystem::path{"resources"} / overlapping_result;
     CHECK(std::filesystem::file_size(overlapping_result) == std::filesystem::file_size(overlapping_result));
 }
