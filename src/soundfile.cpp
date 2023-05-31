@@ -1,20 +1,14 @@
 #include "soundfile.hpp"
+#include <filesystem>
 #include <ios>
 #include <limits>
 #include <cassert>
 #include <sstream>
-#include <filesystem>
 
-soundfile::soundfile(const char *filename)
+soundfile::soundfile(const std::filesystem::path &path)
 {
-    if (!std::filesystem::exists(filename))
-    {
-        std::ostringstream message;
-        message << "filename " << filename << " not exists";
-        throw std::ios_base::failure(message.str());
-    }
-
-    m_file = SndfileHandle(filename);
+    assert(std::filesystem::exists(path) && "While open file");
+    m_file = SndfileHandle(path);
 
     if (m_file.error() != SF_ERR_NO_ERROR)
         throw std::ios_base::failure(m_file.strError());

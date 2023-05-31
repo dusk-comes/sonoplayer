@@ -4,11 +4,13 @@
 #include "common.hpp"
 #include <sndfile.hh>
 
+#include <filesystem>
+
 class soundfile
 {
     public:
         soundfile() = delete;
-        explicit soundfile(const char*) noexcept(false);
+        explicit soundfile(const std::filesystem::path&) noexcept(false);
         ~soundfile() = default;
 
         int samplerate() const;

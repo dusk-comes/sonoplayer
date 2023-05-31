@@ -12,12 +12,6 @@ TEST_CASE("SOUNDFILE TO READ METADATA")
     REQUIRE(file.channels() == 1);
 }
 
-TEST_CASE("SOUNDFILE TO OPEN A NON EXISTING FILE")
-{
-    REQUIRE_THROWS_AS(soundfile("foo.bar"), std::ios_base::failure);
-    REQUIRE_THROWS_WITH(soundfile("foo.bar"), "filename foo.bar not exists: iostream error");
-}
-
 TEST_CASE("SOUNDFILE TO READ SAMPLES")
 {
     soundfile file("resources/test.wav");
