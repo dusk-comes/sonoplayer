@@ -7,7 +7,13 @@ set(PROJECT_VERSION 0.0.${PATCH_VERSION})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 option(ENABLE_TESTS "to add tests to the project" ON)
+option(STATIC_CODE_ANALYSIS OFF)
+if(STATIC_CODE_ANALYSIS)
+    set(CMAKE_CXX_CLANG_TIDY clang-tidy-15 -checks=-*,bugprone-*)
+endif()
 
 include(GNUInstallDirs)
 include(CheckIncludeFileCXX)

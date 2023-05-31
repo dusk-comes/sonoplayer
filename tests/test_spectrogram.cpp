@@ -130,9 +130,9 @@ TEST_CASE("GRAM HASH")
 
     auto no_overlaping_source = std::filesystem::path{"resources/spectral_chirp.png"};
     auto no_overlaping_result = std::filesystem::path{"spectral_chirp.png"};
-    REQUIRE(std::filesystem::file_size(no_overlaping_source) == std::filesystem::file_size(no_overlaping_result));
+    CHECK(std::filesystem::file_size(no_overlaping_source) == std::filesystem::file_size(no_overlaping_result));
 
     auto overlaping_source = std::filesystem::path{"resources/spectral_chirp_overlaps.png"};
     auto overlapping_result = std::filesystem::path{"spectral_chirp_overlaps.png"};
-    REQUIRE(std::filesystem::file_size(overlapping_result) == std::filesystem::file_size(overlapping_result));
+    CHECK(std::filesystem::file_size(overlapping_result) == std::filesystem::file_size(overlapping_result));
 }
