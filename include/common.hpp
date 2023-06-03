@@ -12,7 +12,7 @@ using SAMPLE_SIZE = unsigned int;
 using SAMPLE_ARRAY = std::vector<SAMPLE>;
 
 using COMPLEX = std::complex<SAMPLE>;
-using COMPLEX_ARRAY = std::vector<COMPLEX, fft::alloc_complex<SAMPLE>>;
+using COMPLEX_ARRAY = std::vector<COMPLEX, fft::alloc_complex<COMPLEX>>;
 using REAL_ARRAY = std::vector<SAMPLE, fft::alloc_real<SAMPLE>>;
 
 #endif /* COMMON_HPP */
