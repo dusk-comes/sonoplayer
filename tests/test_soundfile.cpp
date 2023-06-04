@@ -22,7 +22,7 @@ TEST_CASE("SOUNDFILE TO READ SAMPLES")
 
     std::size_t count_block = 0;
     SAMPLE_ARRAY buf(BUFFER_SIZE);
-    while (file.data(buf))
+    while (file.load_data(buf))
     {
         ++count_block;
     }

@@ -1,19 +1,31 @@
 #include "spectrogram.hpp"
 #include "window.hpp"
 #include <algorithm>
+#include <future>
 #include <cmath>
 #include <limits>
 #include <cassert>
 
 spectrogram::spectrogram() :
     m_segment_size{0},
-    m_overlapping{0},
+    m_overlapped{0},
     m_fft{nullptr}
 {}
 
-void spectrogram::segments(const SAMPLE_SIZE size) {m_segment_size = size;}
+void spectrogram::segments(const SAMPLE_SIZE size)
+{
+    m_segment_size = size;
+}
 
-void spectrogram::overlapping(const SAMPLE_SIZE size) {m_overlapping = (size < m_segment_size) ? size : m_segment_size;}
+SAMPLE_SIZE spectrogram::segments() const
+{
+    return m_segment_size;
+}
+
+void spectrogram::overlapped(const SAMPLE_SIZE size)
+{
+    m_overlapped = (size < m_segment_size) ? size : m_segment_size;
+}
 
 void spectrogram::normalize(COMPLEX_ARRAY &series_f) const
 {
@@ -44,7 +56,7 @@ void spectrogram::prepare()
 void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::function<void(SAMPLE_ARRAY)> &callback)
 {
     static SAMPLE_ARRAY segment(m_segment_size);
-    const auto step = m_segment_size - m_overlapping;
+    const auto step = m_segment_size - m_overlapped;
 
     using diff_type = SAMPLE_ARRAY::difference_type;
     assert(data.size() <= std::numeric_limits<diff_type>::max() && "While calculate Power");
@@ -64,7 +76,7 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::function<void(S
         static SAMPLE_ARRAY spectr_power(m_fft->series_size());
         magnitude(series_f, spectr_power);
 
-        callback(spectr_power);
+        auto sending = std::async(std::launch::async, callback, spectr_power);
         std::fill(spectr_power.begin(), spectr_power.end(), 0.);
         std::fill(segment.begin(), segment.end(), 0.);
     }

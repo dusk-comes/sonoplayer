@@ -30,7 +30,7 @@ std::size_t soundfile::frames() const
     return m_file.frames();
 }
 
-std::size_t soundfile::data(SAMPLE_ARRAY &buffer)
+std::size_t soundfile::load_data(SAMPLE_ARRAY &buffer)
 {
     auto count_max_frames = buffer.size() / channels();
     assert(count_max_frames <= std::numeric_limits<sf_count_t>::max() && "While read soundfile");

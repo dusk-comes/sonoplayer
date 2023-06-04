@@ -1,5 +1,4 @@
-#ifndef SOUNDFILE_HPP
-#define SOUNDFILE_HPP
+#pragma once
 
 #include "common.hpp"
 #include <sndfile.hh>
@@ -16,10 +15,8 @@ class soundfile
         SAMPLE_SIZE samplerate() const;
         SAMPLE_SIZE channels() const;
         std::size_t frames() const;
-        std::size_t data(SAMPLE_ARRAY&);
+        std::size_t load_data(SAMPLE_ARRAY&);
 
     private:
         SndfileHandle m_file;
 };
-
-#endif /* SOUNDFILE_HPP */

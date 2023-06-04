@@ -113,7 +113,7 @@ TEST_CASE("SPECTROGRAM")
     SECTION("overlapping segments")
     {
         const std::size_t overlapping_blocks = 120;
-        sp.overlapping(overlapping_blocks);
+        sp.overlapped(overlapping_blocks);
         const double time_resolution = (block_length - overlapping_blocks) / samplerate;
 
         sp.calculate(data.get(), fill_result);

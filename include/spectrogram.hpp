@@ -1,5 +1,4 @@
-#ifndef SPECTROGRAM_HPP
-#define SPECTROGRAM_HPP
+#pragma once
 
 #include "common.hpp"
 #include "spectr.hpp"
@@ -11,7 +10,7 @@ class spectrogram
 {
     private:
         SAMPLE_SIZE m_segment_size;
-        SAMPLE_SIZE m_overlapping;
+        SAMPLE_SIZE m_overlapped;
         std::unique_ptr<spectr> m_fft;
 
         void normalize(COMPLEX_ARRAY&) const;
@@ -23,9 +22,8 @@ class spectrogram
         ~spectrogram() = default;
 
         void segments(const SAMPLE_SIZE);
-        void overlapping(const SAMPLE_SIZE);
+        SAMPLE_SIZE segments() const;
+        void overlapped(const SAMPLE_SIZE);
         void prepare();
         void calculate(const SAMPLE_ARRAY&, const std::function<void(SAMPLE_ARRAY)>&);
 };
-
-#endif /* SPECTROGRAM_HPP */

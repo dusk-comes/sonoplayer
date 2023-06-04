@@ -1,8 +1,8 @@
-#ifndef COMMON_HPP
-#define COMMON_HPP
+#pragma once
 
 #include <math.h>
 #include <vector>
+#include <chrono>
 #include <complex>
 
 #include "alloc.hpp"
@@ -15,4 +15,7 @@ using COMPLEX = std::complex<SAMPLE>;
 using COMPLEX_ARRAY = std::vector<COMPLEX, fft::alloc_complex<COMPLEX>>;
 using REAL_ARRAY = std::vector<SAMPLE, fft::alloc_real<SAMPLE>>;
 
-#endif /* COMMON_HPP */
+namespace my::time
+{
+    using seconds = std::chrono::duration<float>;
+}
