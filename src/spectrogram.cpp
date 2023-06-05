@@ -63,10 +63,9 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::function<void(S
     auto data_size = static_cast<diff_type>(data.size());
 
     for (diff_type segment_begin = 0, segment_end = segment_begin + m_segment_size;
-            segment_begin < data_size;
+            segment_end <= data_size;
             segment_begin += step, segment_end = segment_begin + m_segment_size)
     {
-        segment_end = (segment_end < data_size) ? segment_end : data_size;
         std::copy(std::next(data.begin(), segment_begin), std::next(data.begin(), segment_end), segment.begin());
 
         apply_windowing(segment);

@@ -24,7 +24,7 @@ struct chirp {
             time_range(step);
         }
 
-        SAMPLE_ARRAY get()
+        SAMPLE_ARRAY data()
         {
             if (!initialized)
             {
@@ -82,9 +82,9 @@ TEST_CASE("SPECTROGRAM")
     const double samplerate = 1 / step;
     const double freq_resolution = samplerate / block_length;
 
-    chirp data(static_cast<std::size_t>(2 / step), step);
-    data.freq_start = 50;
-    data.freq_end = 250;
+    chirp chirp(static_cast<std::size_t>(2 / step), step);
+    chirp.freq_start = 50;
+    chirp.freq_end = 250;
 
     std::vector<std::vector<double>> result;
     
@@ -96,15 +96,15 @@ TEST_CASE("SPECTROGRAM")
     sp.segments(block_length);
     sp.prepare();
 
-    auto expected_bins = bins + 1; // ftt routine returning DC
+    auto expected_bins = bins + 1; // ftt routine returns DC parts
     SECTION("without overlapping")
     {
         const double time_resolution = block_length / samplerate;
 
-        sp.calculate(data.get(), fill_result);
+        sp.calculate(chirp.data(), fill_result);
         write_file("spectral_chirp.dat", result, time_resolution, freq_resolution, bins);
 
-        auto expected_segments = std::ceil(static_cast<double>(data.get().size()) / block_length);
+        auto expected_segments = chirp.data().size() / block_length;
         CHECK(result.size() == expected_segments);
         CHECK(result.front().size() == expected_bins);
         CHECK(result.back().size() == expected_bins);
@@ -116,10 +116,10 @@ TEST_CASE("SPECTROGRAM")
         sp.overlapped(overlapping_blocks);
         const double time_resolution = (block_length - overlapping_blocks) / samplerate;
 
-        sp.calculate(data.get(), fill_result);
+        sp.calculate(chirp.data(), fill_result);
         write_file("spectral_chirp_overlaps.dat", result, time_resolution, freq_resolution, bins);
 
-        auto expected_segments = std::ceil(static_cast<double>(data.get().size()) / (block_length - overlapping_blocks));
+        auto expected_segments = (chirp.data().size() - overlapping_blocks) / (block_length - overlapping_blocks);
         CHECK(result.size() == expected_segments);
         CHECK(result.front().size() == expected_bins);
         CHECK(result.back().size() == expected_bins);
