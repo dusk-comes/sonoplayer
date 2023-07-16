@@ -22,6 +22,14 @@ include(libsndfile.cmake)                                   # external linked li
 include(fftw.cmake)                                         # external linked library
 include_directories(${PROJECT_SOURCE_DIR}/include)
 
+Include(FetchContent)
+FetchContent_Declare(
+    spectroplot
+    GIT_REPOSITORY https://github.com/dusk-comes/spectroplot.git
+    GIT_TAG origin/main
+)
+FetchContent_MakeAvailable(spectroplot)
+
 file(COPY "resources" DESTINATION "${CMAKE_BINARY_DIR}")
 
 if(MSVC)
