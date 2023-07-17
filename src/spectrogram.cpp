@@ -27,6 +27,11 @@ void spectrogram::overlapped(const SAMPLE_SIZE size)
     m_overlapped = (size < m_segment_size) ? size : m_segment_size;
 }
 
+SAMPLE_SIZE spectrogram::overlapped() const
+{
+    return m_overlapped;
+}
+
 void spectrogram::normalize(COMPLEX_ARRAY &series_f) const
 {
     std::transform(series_f.begin(), series_f.end(),

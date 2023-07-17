@@ -24,6 +24,7 @@ class spectrogram
         void segments(const SAMPLE_SIZE);
         SAMPLE_SIZE segments() const;
         void overlapped(const SAMPLE_SIZE);
+        SAMPLE_SIZE overlapped() const;
         void prepare();
         void calculate(const SAMPLE_ARRAY&, const std::function<void(SAMPLE_ARRAY)>&);
 };

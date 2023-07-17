@@ -21,8 +21,6 @@ model::model(const std::filesystem::path &file, SAMPLE_SIZE size) :
     auto overlapped = static_cast<unsigned int>(static_cast<double>(segments) * coefficient);
     m_sp.overlapped(overlapped);
 
-    m_step = samples_to_seconds(segments - overlapped);
-
     m_sp.prepare();
 }
 
@@ -35,7 +33,8 @@ model::data::data(my::time::seconds _x, SAMPLE_ARRAY _y, double _freq) noexcept 
 
 void model::add_data_to_display(SAMPLE_ARRAY spectr_power)
 {
-    m_offset += m_step;
+    static auto step = samples_to_seconds(m_sp.segments() - m_sp.overlapped());
+    m_offset += step;
     static const auto freq_resolution = static_cast<double>(m_sf.samplerate()) / m_sp.segments();
     m_data_to_display.emplace(m_offset, std::move(spectr_power), freq_resolution);
 }

@@ -32,7 +32,6 @@ class model
         my::time::seconds m_offset;
         soundfile m_sf;
         SAMPLE_ARRAY m_buffer;
-        my::time::seconds m_step;
         spectrogram m_sp;
         std::queue<data> m_data_to_display;
         std::queue<SAMPLE_ARRAY> m_data_to_play;
