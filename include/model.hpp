@@ -5,21 +5,10 @@
 #include "soundfile.hpp"
 
 #include <queue>
-#include <array>
 
 class model
 {
     public:
-        struct data
-        {
-            my::time::seconds x;
-            SAMPLE_ARRAY y;
-            double freq_resolution;
-
-            data() = delete;
-            data(my::time::seconds, SAMPLE_ARRAY, double) noexcept;
-        };
-
         model() = delete;
         model(const std::filesystem::path&, SAMPLE_SIZE);
         ~model() = default;
@@ -33,8 +22,12 @@ class model
         soundfile m_sf;
         SAMPLE_ARRAY m_buffer;
         spectrogram m_sp;
-        std::queue<data> m_data_to_display;
-        std::queue<SAMPLE_ARRAY> m_data_to_play;
+        std::queue<SAMPLE_ARRAY> m_data_to_display;
+        //std::queue<SAMPLE_ARRAY> m_data_to_play;
 
-        my::time::seconds samples_to_seconds(SAMPLE_SIZE);
+        my::time::seconds samples_to_seconds(SAMPLE_SIZE) const;
+        my::time::seconds time_resolution() const;
+        double freq_resolutions() const;
+        uint bins() const;
+        uint stripes() const;
 };
