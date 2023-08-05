@@ -26,7 +26,7 @@ Include(FetchContent)
 FetchContent_Declare(
     spectroplot
     GIT_REPOSITORY https://github.com/dusk-comes/spectroplot.git
-    GIT_TAG origin/main
+    GIT_TAG origin/non-realtime-colormap
 )
 FetchContent_MakeAvailable(spectroplot)
 
