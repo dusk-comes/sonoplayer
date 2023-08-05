@@ -11,7 +11,7 @@ add_executable(${TEST_TARGET}
     test_soundfile.cpp)
 
 target_link_libraries(${TEST_TARGET}
-    PRIVATE Src
+    PRIVATE ${PROJECT_NAME}
     PRIVATE Catch2::Catch2WithMain)
 
 add_custom_target(gnuplot
