@@ -26,7 +26,7 @@ model::model(const std::filesystem::path &file, SAMPLE_SIZE size) :
 
 void model::add_data_to_display(SAMPLE_ARRAY spectr_power)
 {
-    m_offset += time_resolution();
+    //m_offset += time_resolution();
     m_data_to_display.emplace(std::move(spectr_power));
 }
 

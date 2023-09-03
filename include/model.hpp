@@ -17,6 +17,11 @@ class model
         void overlapped(SAMPLE_SIZE);
         void calculate();
 
+        my::time::seconds time_resolution() const;
+        double freq_resolutions() const;
+        uint bins() const;
+        uint stripes() const;
+
     private:
         my::time::seconds m_offset;
         soundfile m_sf;
@@ -26,8 +31,4 @@ class model
         //std::queue<SAMPLE_ARRAY> m_data_to_play;
 
         my::time::seconds samples_to_seconds(SAMPLE_SIZE) const;
-        my::time::seconds time_resolution() const;
-        double freq_resolutions() const;
-        uint bins() const;
-        uint stripes() const;
 };
