@@ -22,12 +22,13 @@ class model
         uint bins() const;
         uint stripes() const;
 
+        std::vector<SAMPLE_ARRAY> m_data_to_display;
+
     private:
         my::time::seconds m_offset;
         soundfile m_sf;
         SAMPLE_ARRAY m_buffer;
         spectrogram m_sp;
-        std::queue<SAMPLE_ARRAY> m_data_to_display;
         //std::queue<SAMPLE_ARRAY> m_data_to_play;
 
         my::time::seconds samples_to_seconds(SAMPLE_SIZE) const;
