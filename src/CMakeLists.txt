@@ -1,8 +1,9 @@
 add_library(${PROJECT_NAME}
-    spectr.cpp
+    fft_routine.cpp
     spectrogram.cpp
-    model.cpp
-    window.cpp
+    spectrogram_builder.cpp
+    data_manager.cpp
+    windowing.cpp
     soundfile.cpp)
 
 target_include_directories(${PROJECT_NAME}

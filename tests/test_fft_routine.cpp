@@ -6,7 +6,7 @@
 #include <vector>
 #include <complex>
 
-#include "spectr.hpp"
+#include "fft_routine.hpp"
 
 using complex = std::complex<SAMPLE>;
 
@@ -19,7 +19,7 @@ TEST_CASE("SPECTR OF NATURAL ROW")
     SAMPLE_ARRAY data(row_size);
     std::iota(data.begin(), data.end(), 0);
 
-    spectr sp(row_size);
+    fft_routine sp(row_size);
     auto result = sp.calculate(data);
 
     for (std::size_t i = 0; i < expected.size(); ++i)

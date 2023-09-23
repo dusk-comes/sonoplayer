@@ -1,11 +1,11 @@
-#include "spectr.hpp"
+#include "fft_routine.hpp"
 #include "common.hpp"
 #include <algorithm>
 #include <memory>
 #include <limits>
 #include <cassert>
 
-spectr::spectr(const std::size_t size) :
+fft_routine::fft_routine(const std::size_t size) :
     m_input(size),
     m_output(size/2 + 1)
 {
@@ -19,17 +19,17 @@ spectr::spectr(const std::size_t size) :
     assert(m_plan != nullptr && "While creating fftw_plan");
 }
 
-spectr::~spectr()
+fft_routine::~fft_routine()
 {
     fftw_destroy_plan(m_plan);
 }
 
-std::size_t spectr::series_size() const
+std::size_t fft_routine::series_size() const
 {
     return m_output.size();
 }
 
-COMPLEX_ARRAY spectr::calculate(const SAMPLE_ARRAY &data)
+COMPLEX_ARRAY fft_routine::calculate(const SAMPLE_ARRAY &data)
 {
     assert(data.size() == m_input.size() && "Input data's size equal fft rate");
 

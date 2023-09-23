@@ -1,15 +1,17 @@
 #include "spectrogram.hpp"
-#include "window.hpp"
+#include "common.hpp"
+#include "windowing.hpp"
 #include <algorithm>
 #include <future>
 #include <cmath>
 #include <limits>
 #include <cassert>
 
-spectrogram::spectrogram() :
+spectrogram::spectrogram(const callback &f) :
     m_segment_size{0},
     m_overlapped{0},
-    m_fft{nullptr}
+    m_fft{nullptr},
+    m_data_handler(f)
 {}
 
 void spectrogram::segments(const SAMPLE_SIZE size)
@@ -32,6 +34,11 @@ SAMPLE_SIZE spectrogram::overlapped() const
     return m_overlapped;
 }
 
+void spectrogram::init_data_handler(const callback &handler)
+{
+    m_data_handler = handler;
+}
+
 void spectrogram::normalize(COMPLEX_ARRAY &series_f) const
 {
     std::transform(series_f.begin(), series_f.end(),
@@ -48,18 +55,24 @@ void spectrogram::magnitude(COMPLEX_ARRAY &series_f, SAMPLE_ARRAY &output) const
 
 void spectrogram::apply_windowing(SAMPLE_ARRAY &data) const
 {
-    window::hamming(data);
+    windowing::hamming(data);
+}
+
+my::time::seconds spectrogram::samples_to_seconds(double samplerate) const
+{
+    return my::time::seconds(sample_resolution() / samplerate);
 }
 
 void spectrogram::prepare()
 {
     assert(m_segment_size != 0 && "While prepare calculation");
 
-    m_fft = std::make_unique<spectr>(m_segment_size);
+    m_fft = std::make_unique<fft_routine>(m_segment_size);
 }
 
-void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::function<void(SAMPLE_ARRAY)> &callback)
+void spectrogram::calculate(const SAMPLE_ARRAY &data)
 {
+    assert(m_data_handler != nullptr && "While calculate Power");
     static SAMPLE_ARRAY segment(m_segment_size);
     const auto step = m_segment_size - m_overlapped;
 
@@ -80,8 +93,36 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data, const std::function<void(S
         static SAMPLE_ARRAY spectr_power(m_fft->series_size());
         magnitude(series_f, spectr_power);
 
-        auto sending = std::async(std::launch::async, callback, spectr_power);
+        auto sending = std::async(std::launch::async, m_data_handler, spectr_power);
         std::fill(spectr_power.begin(), spectr_power.end(), 0.);
         std::fill(segment.begin(), segment.end(), 0.);
     }
+}
+
+SAMPLE_SIZE spectrogram::sample_resolution() const
+{
+    return segments() - overlapped();
+}
+
+double spectrogram::freq_resolution(double samplerate) const
+{
+    static const auto freq_resolution = static_cast<double>(samplerate) / segments();
+    return freq_resolution;
+}
+
+my::time::seconds spectrogram::time_resolution(double samplerate) const
+{
+    return samples_to_seconds(samplerate);
+}
+
+uint spectrogram::bins() const
+{
+    static const auto bins = static_cast<uint>(std::floor(segments() / 2));
+    return bins;
+}
+
+uint spectrogram::stripes(SAMPLE_SIZE frames) const
+{
+    static const auto stripes = (frames - overlapped()) / (segments() - overlapped());
+    return static_cast<uint>(stripes);
 }

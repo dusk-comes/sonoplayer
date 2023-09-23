@@ -6,8 +6,8 @@ include(Catch)
 
 add_executable(${TEST_TARGET}
     test_spectrogram.cpp
-    test_spectr.cpp
-    test_window.cpp
+    test_fft_routine.cpp
+    test_windowing.cpp
     test_soundfile.cpp)
 
 target_link_libraries(${TEST_TARGET}

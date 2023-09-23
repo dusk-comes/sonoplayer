@@ -7,7 +7,7 @@
 #include <memory>
 
 
-class spectr
+class fft_routine
 {
     private:
         REAL_ARRAY m_input;
@@ -15,9 +15,9 @@ class spectr
         fftw_plan m_plan;
 
     public:
-        spectr() = delete;
-        explicit spectr(const std::size_t);
-        ~spectr();
+        fft_routine() = delete;
+        explicit fft_routine(const std::size_t);
+        ~fft_routine();
 
         COMPLEX_ARRAY calculate(const SAMPLE_ARRAY&);
         std::size_t series_size() const;

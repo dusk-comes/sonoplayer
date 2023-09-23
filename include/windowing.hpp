@@ -4,7 +4,7 @@
 #include "common.hpp"
 #include <functional>
 
-class window
+class windowing
 {
     public:
         static void hanning(SAMPLE_ARRAY&);

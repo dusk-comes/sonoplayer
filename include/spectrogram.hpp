@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.hpp"
-#include "spectr.hpp"
+#include "fft_routine.hpp"
 
 #include <memory>
 #include <functional>
@@ -9,22 +9,33 @@
 class spectrogram
 {
     private:
+        using callback = std::function<void(SAMPLE_ARRAY)>;
+
         SAMPLE_SIZE m_segment_size;
         SAMPLE_SIZE m_overlapped;
-        std::unique_ptr<spectr> m_fft;
+        std::unique_ptr<fft_routine> m_fft;
+        callback m_data_handler;
 
         void normalize(COMPLEX_ARRAY&) const;
         void magnitude(COMPLEX_ARRAY&, SAMPLE_ARRAY&) const;
         void apply_windowing(SAMPLE_ARRAY&) const;
+        my::time::seconds samples_to_seconds(double) const;
 
     public:
-        spectrogram();
+        spectrogram() = default;
+        spectrogram(const callback&);
         ~spectrogram() = default;
 
         void segments(const SAMPLE_SIZE);
         SAMPLE_SIZE segments() const;
         void overlapped(const SAMPLE_SIZE);
         SAMPLE_SIZE overlapped() const;
+        void init_data_handler(const callback&);
         void prepare();
-        void calculate(const SAMPLE_ARRAY&, const std::function<void(SAMPLE_ARRAY)>&);
+        void calculate(const SAMPLE_ARRAY&);
+        SAMPLE_SIZE sample_resolution() const;
+        double freq_resolution(double) const;
+        my::time::seconds time_resolution(double) const;
+        uint bins() const;
+        uint stripes(SAMPLE_SIZE) const;
 };

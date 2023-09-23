@@ -1,9 +1,9 @@
-#include "window.hpp"
+#include "windowing.hpp"
 #include "common.hpp"
 #include <cmath>
 #include <functional>
 
-void window::hanning(SAMPLE_ARRAY &data)
+void windowing::hanning(SAMPLE_ARRAY &data)
 {
     auto func = [size = data.size(), index = 0](SAMPLE &sample) mutable {
         sample *= 0.5 - 0.5 * std::cos(2 * M_PI * index++ / static_cast<double>(size - 1));
@@ -12,7 +12,7 @@ void window::hanning(SAMPLE_ARRAY &data)
     std::for_each(data.begin(), data.end(), func);
 }
 
-void window::hamming(SAMPLE_ARRAY &data)
+void windowing::hamming(SAMPLE_ARRAY &data)
 {
     auto func = [size = data.size(), index = 0](SAMPLE &sample) mutable {
         sample *= 0.54 - 0.46 * std::cos(2 * M_PI * index++ / static_cast<double>(size - 1));
@@ -21,7 +21,7 @@ void window::hamming(SAMPLE_ARRAY &data)
     std::for_each(data.begin(), data.end(), func);
 }
 
-void window::blackman(SAMPLE_ARRAY &data)
+void windowing::blackman(SAMPLE_ARRAY &data)
 {
     auto func = [size = data.size(), index = 0](SAMPLE &sample) mutable {
         sample *= 0.42
@@ -33,7 +33,7 @@ void window::blackman(SAMPLE_ARRAY &data)
     std::for_each(data.begin(), data.end(), func);
 }
 
-void window::flattop(SAMPLE_ARRAY &data)
+void windowing::flattop(SAMPLE_ARRAY &data)
 {
     auto func = [size = data.size(), index = 0](SAMPLE &sample) mutable {
         sample *= 0.21557895

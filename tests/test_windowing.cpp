@@ -1,6 +1,6 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_approx.hpp>
-#include "window.hpp"
+#include "windowing.hpp"
 #include <functional>
 #include <vector>
 #include <iterator>
@@ -9,14 +9,14 @@
 
 using namespace std::placeholders;
 
-class test_window
+class test_windowing
 {
     protected:
         SAMPLE_ARRAY expected;
         SAMPLE_ARRAY result;
 
     public:
-        test_window(const std::string filename)
+        test_windowing(const std::string filename)
         {
             auto numpy_out = std::ifstream("resources/" + filename);
             std::istream_iterator<double> start(numpy_out), end;
@@ -36,47 +36,47 @@ class test_window
         }
 };
 
-class test_window_hanning : public test_window
+class test_window_hanning : public test_windowing
 {
     public:
-        test_window_hanning() : test_window("hanning.txt") {}
+        test_window_hanning() : test_windowing("hanning.txt") {}
 
         void run()
         {
-            test_window::evaluate(std::bind(window::hanning, _1));
+            test_windowing::evaluate(std::bind(windowing::hanning, _1));
         }
 };
 
-class test_window_hamming : public test_window
+class test_window_hamming : public test_windowing
 {
     public:
-        test_window_hamming() : test_window("hamming.txt") {}
+        test_window_hamming() : test_windowing("hamming.txt") {}
 
         void run()
         {
-            test_window::evaluate(std::bind(window::hamming, _1));
+            test_windowing::evaluate(std::bind(windowing::hamming, _1));
         }
 };
 
-class test_window_blackman : public test_window
+class test_window_blackman : public test_windowing
 {
     public:
-        test_window_blackman() : test_window("blackman.txt") {}
+        test_window_blackman() : test_windowing("blackman.txt") {}
 
         void run()
         {
-            test_window::evaluate(std::bind(window::blackman, _1));
+            test_windowing::evaluate(std::bind(windowing::blackman, _1));
         }
 };
 
-class test_window_flattop : public test_window
+class test_window_flattop : public test_windowing
 {
     public:
-        test_window_flattop() : test_window("flattop.txt") {}
+        test_window_flattop() : test_windowing("flattop.txt") {}
 
         void run()
         {
-            test_window::evaluate(std::bind(window::flattop, _1));
+            test_windowing::evaluate(std::bind(windowing::flattop, _1));
         }
 };
 

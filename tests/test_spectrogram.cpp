@@ -77,10 +77,7 @@ void write_file(const char *filename, const std::vector<std::vector<double>> &ve
 TEST_CASE("SPECTROGRAM")
 {
     const double step = 0.001;
-    const std::size_t block_length = 128;
-    const std::size_t bins = block_length / 2;
     const double samplerate = 1 / step;
-    const double freq_resolution = samplerate / block_length;
 
     chirp chirp(static_cast<std::size_t>(2 / step), step);
     chirp.freq_start = 50;
@@ -92,19 +89,19 @@ TEST_CASE("SPECTROGRAM")
         result.push_back(magnitude);
     };
 
-    spectrogram sp;
-    sp.segments(block_length);
-    sp.prepare();
+    spectrogram sg(fill_result);
+    sg.segments(128);
+    sg.prepare();
 
-    auto expected_bins = bins + 1; // ftt routine returns DC parts
+    auto expected_bins = sg.bins() + 1; // ftt routine returns DC parts
     SECTION("without overlapping")
     {
-        const double time_resolution = block_length / samplerate;
+        const double time_resolution = sg.sample_resolution() / samplerate;
 
-        sp.calculate(chirp.data(), fill_result);
-        write_file("spectral_chirp.dat", result, time_resolution, freq_resolution, bins);
+        sg.calculate(chirp.data());
+        write_file("spectral_chirp.dat", result, time_resolution, sg.freq_resolution(samplerate), sg.bins());
 
-        auto expected_segments = chirp.data().size() / block_length;
+        auto expected_segments = chirp.data().size() / sg.segments();
         CHECK(result.size() == expected_segments);
         CHECK(result.front().size() == expected_bins);
         CHECK(result.back().size() == expected_bins);
@@ -113,13 +110,13 @@ TEST_CASE("SPECTROGRAM")
     SECTION("overlapping segments")
     {
         const std::size_t overlapping_blocks = 120;
-        sp.overlapped(overlapping_blocks);
-        const double time_resolution = (block_length - overlapping_blocks) / samplerate;
+        sg.overlapped(overlapping_blocks);
+        const double time_resolution = sg.sample_resolution() / samplerate;
 
-        sp.calculate(chirp.data(), fill_result);
-        write_file("spectral_chirp_overlaps.dat", result, time_resolution, freq_resolution, bins);
+        sg.calculate(chirp.data());
+        write_file("spectral_chirp_overlaps.dat", result, time_resolution, sg.freq_resolution(samplerate), sg.bins());
 
-        auto expected_segments = (chirp.data().size() - overlapping_blocks) / (block_length - overlapping_blocks);
+        auto expected_segments = (chirp.data().size() - overlapping_blocks) / (sg.segments() - overlapping_blocks);
         CHECK(result.size() == expected_segments);
         CHECK(result.front().size() == expected_bins);
         CHECK(result.back().size() == expected_bins);
