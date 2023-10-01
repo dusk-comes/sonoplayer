@@ -1,10 +1,7 @@
-#include <cmath>
-#include <cassert>
-#include <memory>
-#include <array>
-
 #include "soundfile.hpp"
+#include "spectrogram.hpp"
 #include "spectrogram_builder.hpp"
+#include "data_manager.hpp"
 
 void handler([[maybe_unused]] SAMPLE_ARRAY &ar)
 {
@@ -15,21 +12,17 @@ int main()
     SAMPLE_SIZE buffer_size = 4092;
     double overlapping_coef = 0.5;
     spectrogram_builder builder;
-    auto sg = builder
+    std::shared_ptr<spectrogram> sg = builder
         .set_data_length(buffer_size)
         .set_overlapping_coefficient(overlapping_coef)
         .build();
-
-    sg->init_data_handler(handler);
     sg->prepare();
 
-    const std::filesystem::path &filename("");
-    std::shared_ptr<soundfile> sf(new soundfile(filename));
+    const std::filesystem::path &filename("resources/test.wav");
+    data_manager dm(filename);
+    dm.setup_core(sg);
 
-    SAMPLE_ARRAY buffer(buffer_size);
-    while(sf->load_data(buffer))
-    {
-        sg->calculate(buffer);
-    }
+    dm.play(buffer_size);
+
     return 0;
 }
