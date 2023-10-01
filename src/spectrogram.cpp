@@ -93,7 +93,7 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data)
         static SAMPLE_ARRAY spectr_power(m_fft->series_size());
         magnitude(series_f, spectr_power);
 
-        auto sending = std::async(std::launch::async, m_data_handler, spectr_power);
+        m_data_handler(spectr_power);
         std::fill(spectr_power.begin(), spectr_power.end(), 0.);
         std::fill(segment.begin(), segment.end(), 0.);
     }

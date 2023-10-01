@@ -9,7 +9,7 @@
 class spectrogram
 {
     private:
-        using callback = std::function<void(SAMPLE_ARRAY)>;
+        using callback = std::function<void(SAMPLE_ARRAY&)>;
 
         SAMPLE_SIZE m_segment_size;
         SAMPLE_SIZE m_overlapped;

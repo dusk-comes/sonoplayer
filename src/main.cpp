@@ -6,7 +6,7 @@
 #include "soundfile.hpp"
 #include "spectrogram_builder.hpp"
 
-void handler([[maybe_unused]] SAMPLE_ARRAY ar)
+void handler([[maybe_unused]] SAMPLE_ARRAY &ar)
 {
 }
 
