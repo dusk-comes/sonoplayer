@@ -19,7 +19,7 @@ class spectrogram
         void normalize(COMPLEX_ARRAY&) const;
         void magnitude(COMPLEX_ARRAY&, SAMPLE_ARRAY&) const;
         void apply_windowing(SAMPLE_ARRAY&) const;
-        my::time::seconds samples_to_seconds(double) const;
+        my::time::milliseconds samples_to_time(double) const;
 
     public:
         spectrogram() = default;

@@ -58,9 +58,9 @@ void spectrogram::apply_windowing(SAMPLE_ARRAY &data) const
     windowing::hamming(data);
 }
 
-my::time::seconds spectrogram::samples_to_seconds(double samplerate) const
+my::time::milliseconds spectrogram::samples_to_time(double samplerate) const
 {
-    return my::time::seconds(sample_resolution() / samplerate);
+    return my::time::milliseconds(sample_resolution() / samplerate);
 }
 
 void spectrogram::prepare()
@@ -112,7 +112,7 @@ double spectrogram::freq_resolution(double samplerate) const
 
 my::time::seconds spectrogram::time_resolution(double samplerate) const
 {
-    return samples_to_seconds(samplerate);
+    return samples_to_time(samplerate);
 }
 
 uint spectrogram::bins() const
