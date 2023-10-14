@@ -24,6 +24,9 @@ class data_manager : public iobservable
         void setup_core(std::shared_ptr<spectrogram>&);
         void play(const SAMPLE_SIZE);
 
+        double freq_domain() const;
+        double time_domain() const;
+
     private:
         soundfile m_sf;
         std::shared_ptr<spectrogram> m_sg;

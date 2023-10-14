@@ -64,3 +64,13 @@ void data_manager::worker_for_grams()
         }
     }
 }
+
+double data_manager::freq_domain() const
+{
+    return m_sg->bins() * m_sg->freq_resolution(m_sf.samplerate());
+}
+
+double data_manager::time_domain() const
+{
+    return m_sg->stripes(m_sf.frames()) * m_sg->time_resolution(m_sf.samplerate()).count();
+}

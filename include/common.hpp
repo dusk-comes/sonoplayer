@@ -17,6 +17,6 @@ using REAL_ARRAY = std::vector<SAMPLE, fft::alloc_real<SAMPLE>>;
 
 namespace my::time
 {
-    using seconds = std::chrono::duration<float>;
-    using milliseconds = std::chrono::duration<float, std::milli>;
+    using seconds = std::chrono::duration<double>;
+    using milliseconds = std::chrono::duration<double, std::milli>;
 }

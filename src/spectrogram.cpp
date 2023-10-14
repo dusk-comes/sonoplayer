@@ -110,7 +110,7 @@ double spectrogram::freq_resolution(double samplerate) const
     return freq_resolution;
 }
 
-my::time::seconds spectrogram::time_resolution(double samplerate) const
+my::time::milliseconds spectrogram::time_resolution(double samplerate) const
 {
     return samples_to_time(samplerate);
 }

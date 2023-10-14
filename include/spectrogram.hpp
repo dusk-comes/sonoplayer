@@ -35,7 +35,7 @@ class spectrogram
         void calculate(const SAMPLE_ARRAY&);
         SAMPLE_SIZE sample_resolution() const;
         double freq_resolution(double) const;
-        my::time::seconds time_resolution(double) const;
+        my::time::milliseconds time_resolution(double) const;
         uint bins() const;
         uint stripes(SAMPLE_SIZE) const;
 };
