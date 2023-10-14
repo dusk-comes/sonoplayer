@@ -26,6 +26,8 @@ class data_manager : public iobservable
 
         double freq_domain() const;
         double time_domain() const;
+        uint bins() const;
+        uint stripes() const;
 
     private:
         soundfile m_sf;
