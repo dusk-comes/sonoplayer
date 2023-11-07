@@ -35,8 +35,7 @@ class data_manager : public iobservable
 
         std::mutex m_grams_mutex;
         std::condition_variable m_condition;
-        std::atomic_bool m_pause = false;
-        std::atomic_bool m_stope = true;
+        std::atomic_bool m_stop = true;
 
         std::queue<SAMPLE_ARRAY> m_grams;
         std::list<std::pair<task, iobserver_ptr>> m_listeners;

@@ -3,8 +3,7 @@
 
 data_manager::data_manager(const std::filesystem::path& filename) :
     m_sf(filename),
-    m_pause(false),
-    m_stope(true)
+    m_stop(false)
 {
     m_thread_for_grams = std::thread(&data_manager::worker_for_grams, this);
 }
@@ -46,12 +45,12 @@ void data_manager::receive_grams(SAMPLE_ARRAY &grams)
 
 void data_manager::worker_for_grams()
 {
-    while(!m_stope)
+    while(!m_stop)
     {
         std::unique_lock lk(m_grams_mutex);
-        m_condition.wait(lk, [this]() {return !m_pause && !m_grams.empty();});
+        m_condition.wait(lk, [this]() {return !m_stop && !m_grams.empty();});
 
-        if (m_stope) break;
+        if (m_stop) break;
 
         auto stripe = m_grams.front();
         m_grams.pop();
