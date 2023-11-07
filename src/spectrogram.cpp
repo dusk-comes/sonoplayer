@@ -48,7 +48,7 @@ void spectrogram::normalize(COMPLEX_ARRAY &series_f) const
 
 void spectrogram::magnitude(COMPLEX_ARRAY &series_f, SAMPLE_ARRAY &output) const
 {
-    std::transform(series_f.begin(), series_f.end(), output.begin(), [](auto value) {
+    std::transform(series_f.begin(), series_f.end() - m_dc_part, output.begin(), [](auto value) {
             auto squared_magnitude = std::norm(value);
             return 10. / std::log(10.) * std::log(squared_magnitude + 1e-6);});
 }
@@ -90,7 +90,7 @@ void spectrogram::calculate(const SAMPLE_ARRAY &data)
         auto series_f = m_fft->calculate(segment);
         normalize(series_f);
 
-        static SAMPLE_ARRAY spectr_power(m_fft->series_size());
+        static SAMPLE_ARRAY spectr_power(m_fft->series_size() - m_dc_part);
         magnitude(series_f, spectr_power);
 
         m_data_handler(spectr_power);

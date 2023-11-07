@@ -13,6 +13,7 @@ class spectrogram
 
         SAMPLE_SIZE m_segment_size;
         SAMPLE_SIZE m_overlapped;
+        const SAMPLE_SIZE m_dc_part{0};
         std::unique_ptr<fft_routine> m_fft;
         callback m_data_handler;
 
